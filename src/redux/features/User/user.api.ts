@@ -7,6 +7,7 @@ export const userApi = baseApi.injectEndpoints({
       query: (phoneNo) => ({
         url: `/user/search/${phoneNo}`,
         method: "GET",
+        credentials: "include"
       }),
     }),
     updateProfile: builder.mutation({
@@ -14,6 +15,7 @@ export const userApi = baseApi.injectEndpoints({
         url: `/user/${payload.userId}`,
         method: "PATCH",
         body: payload.body,
+        credentials: "include"
       }),
     }),
     updatePassword: builder.mutation({
@@ -21,6 +23,7 @@ export const userApi = baseApi.injectEndpoints({
         url: `/user/update-password`,
         method: "PATCH",
         body,
+        credentials: "include"
       }),
     }),
     updateUser: builder.mutation({
@@ -28,6 +31,7 @@ export const userApi = baseApi.injectEndpoints({
         url: `/user/admin/${payload.userId}`,
         method: "PATCH",
         body:payload,
+        credentials: "include"
       }),
       invalidatesTags: ["SINGLEUSER","USERS","ADMIN_SUMMARY"],
     }),
@@ -36,6 +40,7 @@ export const userApi = baseApi.injectEndpoints({
         url: "/user/me",
         method: "GET",
         // body: userInfo,
+        credentials: "include"
       }),
       providesTags: ["USER"],
     }),
@@ -44,6 +49,7 @@ export const userApi = baseApi.injectEndpoints({
         url: "/user/all-users",
         method: "GET",
         params,
+        credentials: "include"
       }),
       providesTags: ["USERS"],
     }),
@@ -51,6 +57,7 @@ export const userApi = baseApi.injectEndpoints({
       query: (userId) => ({
         url: `/user/${userId}`,
         method: "GET",
+        credentials: "include"
       }),
       providesTags: ["SINGLEUSER"],
     }),

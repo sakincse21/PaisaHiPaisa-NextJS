@@ -7,6 +7,7 @@ export const walletApi = baseApi.injectEndpoints({
       query: (walletId) => ({
         url: `/wallet/${walletId}`,
         method: "GET",
+        credentials: "include"
       }),
       providesTags: ["TRANSACTIONS"]
   }),
