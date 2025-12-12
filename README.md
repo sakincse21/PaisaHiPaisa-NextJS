@@ -42,6 +42,7 @@ The application is built using the latest web technologies, focusing on performa
 - **User Management**: Comprehensive control panels for administrators to manage the system's users.
 - **Responsive Design**: A seamless experience across desktop and mobile devices, thanks to Tailwind CSS and Shadcn/UI.
 - **State Management**: Centralized and efficient state management with Redux Toolkit and RTK Query.
+- **Instant Mails**: Instant mails on each transactions and account processing.
 
 ### User Roles & Permissions
 
