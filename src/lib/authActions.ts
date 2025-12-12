@@ -41,9 +41,9 @@ export async function loginAction(_currentState: any, formData: FormData): Promi
       httpOnly: true,
       secure: true, // Use 'secure' in production
       sameSite: "none",
-      path: "/",
+      // path: "/",
       maxAge: 60 * 60 * 24 * 7, // 7 days
-      domain: ".vercel.app"
+      // domain: ".vercel.app"
     });
 
     // 5. Return success state to the client
