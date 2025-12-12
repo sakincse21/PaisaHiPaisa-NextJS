@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
+import envVars from "@/config";
 import { cookies } from "next/headers";
 
 export async function loginAction(_currentState: any, formData: FormData): Promise<any> {
@@ -8,7 +9,7 @@ export async function loginAction(_currentState: any, formData: FormData): Promi
     const password = formData.get("password") as string;
 
     // 1. Call your backend API
-    const res = await fetch("http://localhost:5000/api/v1/auth/login", {
+    const res = await fetch(`${envVars.backendBaseUrl}/api/v1/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -68,7 +69,7 @@ export async function logoutAction(): Promise<any> {
 
     if (token) {
       // Optional: Call backend logout endpoint
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+      await fetch(`${envVars.backendBaseUrl}/api/v1/auth/logout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,3 +93,4 @@ export async function logoutAction(): Promise<any> {
     };
   }
 }
+

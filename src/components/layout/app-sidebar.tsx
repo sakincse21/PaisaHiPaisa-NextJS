@@ -1,4 +1,4 @@
-'use client';
+'use client'; // ✅ Changed to a client component
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react";
 
@@ -15,7 +15,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import Logo from "@/assets/icons/logo";
-import { authApi, useLogoutMutation } from "@/redux/features/Auth/auth.api";
+import { authApi } from "@/redux/features/Auth/auth.api";
 import { getSidebarItems } from "@/lib/getSidebarItems";
 import { Button } from "../ui/button";
 import { useAppDispatch } from "@/redux/hook";
@@ -23,41 +23,40 @@ import { useUserInfoQuery } from "@/redux/features/User/user.api";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { logoutAction } from "@/lib/authActions"; // ✅ Import the server action
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: userData } = useUserInfoQuery(undefined);
-
-  // console.log(userData?.data?.role, "from sidebar");
 
   const data = {
     navMain: getSidebarItems(userData?.data?.role),
   };
 
   const navigate = useRouter();
-  const [logout] = useLogoutMutation();
   const dispatch = useAppDispatch();
 
   const handleLogout = async () => {
     const toastId = toast.loading("Logging you out. :'(");
     try {
-      dispatch(authApi.util.resetApiState());
-      const res = await logout(undefined).unwrap();
+      // ✅ Call the server action to delete the cookie
+      const res = await logoutAction();
+
       if (res?.success) {
+        // ✅ Reset Redux state after successful logout
         dispatch(authApi.util.resetApiState());
         toast.success("Log out successful.", { id: toastId });
         navigate.push("/login");
+        navigate.refresh(); // ✅ Refresh to ensure all server state is cleared
       } else {
-        toast.error(res?.data?.message, { id: toastId });
+        toast.error(res?.message || "Logout failed.", { id: toastId });
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error(error);
       const errorMessage =
-        error?.data?.message || "Something went wrong. Try again.";
+        error?.message || "Something went wrong. Try again.";
       toast.error(errorMessage, { id: toastId });
     }
   };
-  // console.log(data);
 
   return (
     <Sidebar {...props} className="z-50">
@@ -70,7 +69,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <h2 className="m-2 mt-4 text-lg font-semibold">
           {userData?.data?.role} Dashboard
         </h2>
-        {/* We create a SidebarGroup for each parent. */}
         {data.navMain.map((item) => (
           <SidebarGroup key={item.title}>
             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
@@ -89,14 +87,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ))}
       </SidebarContent>
       <SidebarRail />
-      {/* { localStorage.getItem(tourKey) && <Button
-        variant={"ghost"}
-        size={"lg"}
-        className="text-sm m-4"
-        onClick={handleRestartTour}
-      >
-        Restart Tour
-      </Button>} */}
       <Button
         variant={"outline"}
         size={"lg"}
