@@ -1,3 +1,4 @@
+'use client'
 import AgentCharts from "@/components/modules/Agent/AgentCharts"
 import Overview from "@/components/modules/AllRoles/Overview"
 

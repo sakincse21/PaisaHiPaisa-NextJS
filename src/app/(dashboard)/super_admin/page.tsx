@@ -1,3 +1,4 @@
+'use client'
 import AdminCharts from "@/components/modules/Admin/AdminCharts"
 import Overview from "@/components/modules/AllRoles/Overview"
 
