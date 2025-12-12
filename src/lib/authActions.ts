@@ -66,19 +66,8 @@ export async function loginAction(_currentState: any, formData: FormData): Promi
 export async function logoutAction(): Promise<any> {
   try {
     const cookieStore = cookies();
-    const token = (await cookieStore).get("accessToken")?.value;
-
-    if (token) {
-      // Optional: Call backend logout endpoint
-      await fetch(`${envVars.backendBaseUrl}/api/v1/auth/logout`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `accessToken=${token}`,
-        },
-      });
-    }
-
+    // const token = (await cookieStore).get("accessToken")?.value;
+// 
     // Delete the cookie from the browser
     (await cookieStore).delete("accessToken");
 
