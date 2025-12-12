@@ -14,7 +14,7 @@ const AgentCharts = () => {
     return <LoadingScreen />;
   }
   // console.log("sumamry data", data);
-  const tempUserChartData: IDataForBarChart[] = data?.data[0].filter(
+  const tempUserChartData: IDataForBarChart[] = data?.data[0]?.filter(
     (each: { Label: string; Amount: string }) =>
       each.Label !== "Total"
         ? {
@@ -29,7 +29,7 @@ const AgentCharts = () => {
     title: "User Type vs Volume",
     totalCount: data?.data[0][8]?.Amount,
   };
-  const tempTransactionChartData: IDataForBarChart[] = data?.data[1].map(
+  const tempTransactionChartData: IDataForBarChart[] = data?.data[1]?.map(
     (each: { Label: string; Amount: string }) => ({
       Label: each.Label,
       Amount: each.Amount,
@@ -40,7 +40,7 @@ const AgentCharts = () => {
     footer: "Total transaction amount: BDT",
     title: "Transaction Type vs Amount",
   };
-  const tempVolumeChartData: IDataForBarChart[] = data?.data[1].map(
+  const tempVolumeChartData: IDataForBarChart[] = data?.data[1]?.map(
     (each: { Label: string; Volume: string }) => ({
       Label: each.Label,
       Amount: each.Volume,
@@ -51,7 +51,7 @@ const AgentCharts = () => {
     footer: "Total transactions: ",
     title: "Transaction Type vs Volume",
   };
-  const tempRoleChartData: IDataForBarChart[] = data?.data[2].map(
+  const tempRoleChartData: IDataForBarChart[] = data?.data[2]?.map(
     (each: { Label: string; Amount: string }) => ({
       Label: each.Label,
       Amount: each.Amount,
