@@ -18,6 +18,7 @@ import { useUserInfoQuery } from "@/redux/features/User/user.api";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
+import { logoutAction } from "@/lib/authActions";
 
 export default function Navbar() {
   const { data } = useUserInfoQuery(undefined);
@@ -35,29 +36,52 @@ export default function Navbar() {
   ];
 
   
-  const handleLogout = async () => {
-    const toastId = toast.loading("Logging you out. :'(");
-    try {
-      dispatch(authApi.util.resetApiState());
-      const res = await logout(undefined).unwrap();
-      if (res?.success) {
-        dispatch(authApi.util.resetApiState());
-        toast.success("Log out successful.", { id: toastId });
-        navigate.push("/login");
-      } else {
-        toast.error(res?.data?.message, { id: toastId });
-      }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.error(error);
-      const errorMessage =
-        error?.data?.message || "Something went wrong. Try again.";
-      toast.error(errorMessage, { id: toastId });
-    }
-  };
+  // const handleLogout = async () => {
+  //   const toastId = toast.loading("Logging you out. :'(");
+  //   try {
+  //     dispatch(authApi.util.resetApiState());
+  //     const res = await logout(undefined).unwrap();
+  //     if (res?.success) {
+  //       dispatch(authApi.util.resetApiState());
+  //       toast.success("Log out successful.", { id: toastId });
+  //       navigate.push("/login");
+  //     } else {
+  //       toast.error(res?.data?.message, { id: toastId });
+  //     }
+  //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //   } catch (error: any) {
+  //     console.error(error);
+  //     const errorMessage =
+  //       error?.data?.message || "Something went wrong. Try again.";
+  //     toast.error(errorMessage, { id: toastId });
+  //   }
+  // };
   // console.log(data);
 
 
+  const handleLogout = async () => {
+    const toastId = toast.loading("Logging you out. :'(");
+    try {
+      // ✅ Call the server action to delete the cookie
+      const res = await logoutAction();
+
+      if (res?.success) {
+        // ✅ Reset Redux state after successful logout
+        dispatch(authApi.util.resetApiState());
+        toast.success("Log out successful.", { id: toastId });
+        navigate.push("/login");
+        navigate.refresh(); // ✅ Refresh to ensure all server state is cleared
+      } else {
+        toast.error(res?.message || "Logout failed.", { id: toastId });
+      }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error(error);
+      const errorMessage =
+        error?.message || "Something went wrong. Try again.";
+      toast.error(errorMessage, { id: toastId });
+    }
+  };
   console.log(data?.data?.email);
   
   return (

@@ -48,7 +48,7 @@ export function PieChartComponent(pieChartData: IBarChartData) {
 
   // console.log(chartData, "chartdata");
 
-  const totalUsers = chartData.reduce((acc, curr) => acc + curr.visitors, 0);
+  const totalUsers = chartData?.reduce((acc, curr) => acc + curr.visitors, 0);
 
   return (
     <Card className="flex flex-col min-w-sm md:max-w-5xl">
