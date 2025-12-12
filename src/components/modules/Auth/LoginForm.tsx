@@ -132,8 +132,6 @@ export function LoginForm() {
     const { data: userData } = useUserInfoQuery(undefined);
   const navigate = useRouter();
   const dispatch = useAppDispatch();
-  const location = useSearchParams(); // 👈 new
-  const from = (location?.get("from") as string) || null;
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -157,11 +155,9 @@ export function LoginForm() {
         toast.success("Login successful.", { id: toastId });
 
         // navigate(`/${(res?.data?.role as string)?.toLowerCase()}`);
-        if (from) {
-          navigate.push(from);
-        } else {
+        
           navigate.push(`/${(res?.data?.role as string)?.toLowerCase()}`);
-        }
+        
       } else {
         toast.error(res?.data?.message, { id: toastId });
       }
