@@ -40,7 +40,7 @@ export async function loginAction(_currentState: any, formData: FormData): Promi
     (await cookies()).set("accessToken", token, {
       httpOnly: true,
       secure: true, // Use 'secure' in production
-      sameSite: "lax",
+      sameSite: "none",
       path: "/",
       maxAge: 60 * 60 * 24 * 7, // 7 days
     });
