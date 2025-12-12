@@ -40,7 +40,7 @@ export const userApi = baseApi.injectEndpoints({
         url: "/user/me",
         method: "GET",
         // body: userInfo,
-        credentials: "include"
+        credentials: "include",
       }),
       providesTags: ["USER"],
     }),
