@@ -1,3 +1,4 @@
+
 "use client"
 
 import { cn } from "@/lib/utils"
@@ -15,59 +16,34 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { useActionState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { loginAction } from "@/lib/authActions"
 import { toast } from "sonner"
 import Link from "next/link"
-import { FormEvent, useState } from "react"
-import envVars from "@/config"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter()
-  const [isPending, setIsPending] = useState(false);
+  const [state, formAction, isPending] = useActionState(loginAction, null)
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsPending(true);
-    const toastId = toast.loading("Logging in...");
-
-    const formData = new FormData(event.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
-    try {
-      const res = await fetch(`${envVars.backendBaseUrl}/api/v1/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-        // ✅ This tells the browser to include cookies in the request
-        // and is essential for the backend to set its cookie
-        credentials: "include",
-      });
-
-      const data = await res.json();
-
-      if (!data.success) {
-        throw new Error(data.message || "Login failed");
+  useEffect(() => {
+    if (state?.success === true) {
+      toast.success(state.message);
+      // Redirect to the correct dashboard based on role
+      const role = state.role?.toLowerCase();
+      if (role) {
+        router.push(`/${role}`);
+      } else {
+        router.push('/'); // Fallback to home
       }
-
-      toast.success("Login successful!", { id: toastId });
-      
-      // The browser now has the cookie directly from the backend.
-      // We just need to navigate.
-      const role = data.data?.role?.toLowerCase();
-      router.push(`/${role || ''}`);
-      router.refresh(); // Refresh to re-evaluate middleware and server components
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      toast.error(error.message, { id: toastId });
-    } finally {
-      setIsPending(false);
     }
-  };
+    if (state?.success === false) {
+      toast.error(state.message);
+    }
+  }, [state, router]);
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -79,7 +55,7 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit}>
+          <form action={formAction}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -89,14 +65,13 @@ export function LoginForm({
                   placeholder="m@example.com"
                   name="email"
                   required
-                  disabled={isPending}
                 />
               </Field>
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
                 </div>
-                <Input id="password" type="password" name="password" required disabled={isPending} />
+                <Input id="password" type="password" name="password" required />
               </Field>
               <Field>
                 <Button type="submit" disabled={isPending} className="w-full">{

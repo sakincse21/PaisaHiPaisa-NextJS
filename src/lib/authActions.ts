@@ -94,3 +94,17 @@ export async function logoutAction(): Promise<any> {
   }
 }
 
+export async function getCookie(): Promise<any> {
+  try {
+    const cookieStore = cookies();
+    const token = (await cookieStore).get("accessToken")?.value;
+
+    return token;
+  } catch (error) {
+    console.error("Get Cookie error:", error);
+    return {
+      success: false,
+      message: "An error occurred while retrieving the cookie",
+    };
+  }
+}
