@@ -41,6 +41,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       // ✅ Call the server action to delete the cookie
       const res = await logoutAction();
 
+      navigate.refresh(); // ✅ Refresh to ensure all server state is cleared
       if (res?.success) {
         // ✅ Reset Redux state after successful logout
         dispatch(authApi.util.resetApiState());
